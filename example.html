@@ -11,10 +11,42 @@
 		html{
 			height: 100%
 		}
+		article{
+			display: block;
+			min-height:400px;
+			width:80%;
+			min-width:540px;
+			border:1px solid #6cc;
+			margin:10px 0 100px 110px;
+			padding:20px;
+			border-radius:5px;
+			-o-border-radius:5px;
+			-moz-border-radius:5px;
+			-webkit-border-radius:5px
+		}
+		article p{
+			text-indent:2em;
+			font-size:18px;
+			line-height:1.6em;
+			color:#333
+		}
+		.code{
+			background-color:#0f192a;
+			color:#fff;
+			margin:0 30px;
+			padding:8px 0 4px 0;
+			font-size:.8125em;font-family:Consolas,Inconsolata,"Bitstream Vera Sans Mono",Menlo,Monaco,"Andale Mono","Courier New",monospace
+		}
 		#page{
 			position: absolute;
 			width: 100%;
 			height: 100%; 
+		}
+		#introduce{
+			position: absolute;
+			width: 100%;
+			height: 100%; 
+			top:100%;
 		}
 		#title{
 			text-align: center;
@@ -22,11 +54,35 @@
 			font-size: 80px;
 			line-height: 5;
 		}
+		#isColor{
+			font-size: 22px;
+		}
+
 	</style>
 </head>
 <body>
 	<div id="page">
 		<h1 id="title">colorful.js</h1>
+	</div>
+	<div id="introduce">
+		<article>
+			<p> colorful.js可以通过用户自定义关键帧的颜色，通过css3的transition实现颜色渐变功能。在低版本浏览器会通过javascript来实现。</p>
+			<p>最简单用法：</p>
+			<p class="code">startLoop(document.getElementById('page'));</p><br/>
+			<p>调用方法：</p>
+			<p class="code">function startLoop(element,array,msec,isColor)</p>
+			<p class="code">@param  {HTMLElement} element 接受变色的元素</p>
+			<p class="code">@param  {array} array   变色依赖的关键颜色的二维数组，按rgb传入，ex: [[255,255,0],[0,220,220],[220,0,220]]</p>
+			<p class="code">@param  {number} msec    完成一个变色阶段的时间（毫秒），即从array[i]变色到array[i+1]的时间。为了避免闪烁伤害眼睛，msec不能小于400</p>
+			<p class="code">@param  {string} isColor   如果要变色的是css的color属性，传入'color'</p>
+			<p>example：</p>
+			<p class="code">var page = document.getElementById('page');</p>
+			<p class="code">var array = [[255,255,0],[0,220,220],[153,51,0]];</p>
+			<p class="code">var msec = 3000;</p>
+			<p class="code">startLoop(page,array,msec);</p>
+			<p>传入'isColor'的效果：</p>
+			<p id="isColor">I`m colorful.js</p>
+		</article>
 	</div>
 	<script src="js/colorful.js"></script>
 	<script>
@@ -34,7 +90,8 @@
 			var page = document.getElementById('page');
 			var array = [[255,255,0],[0,220,220],[153,51,0]];
 			var msec = 3000;
-			startLoop(page,array);
+			startLoop(page,array,msec);
+			startLoop(document.getElementById('isColor'),null,null,'color');
 		}
 	</script>
 </body>
