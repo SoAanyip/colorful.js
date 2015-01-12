@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>colorful.js</title>
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		html{
+			height: 100%
+		}
+		#page{
+			position: absolute;
+			width: 100%;
+			height: 100%; 
+		}
+		#title{
+			text-align: center;
+			color: #fff;
+			font-size: 80px;
+			line-height: 5;
+		}
+	</style>
+</head>
+<body>
+	<div id="page">
+		<h1 id="title">colorful.js</h1>
+	</div>
+	<script src="js/colorful.js"></script>
+	<script>
+		window.onload = function(){
+			var page = document.getElementById('page');
+			var array = [[255,255,0],[0,220,220],[153,51,0]];
+			var msec = 3000;
+			startLoop(page,array);
+		}
+	</script>
+</body>
+</html>
