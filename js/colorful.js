@@ -53,6 +53,7 @@
  * 
  */
 function loopColor(msg){
+	msg.page.style = msg.page.style || {};
 	msg.page.style['transition']='all '+msg.second+'s linear';
 	msg.page.style['-o-transition']='all '+msg.second+'s linear';
 	msg.page.style['-webkit-transition']='all '+msg.second+'s linear';
