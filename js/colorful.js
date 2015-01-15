@@ -3,49 +3,50 @@
  *	author by So Aanyip
  *  10th Jan 2015
  */
-
-/**
- * 启动方法
- * @param  {HTMLElement} element 接受变色的元素
- * @param  {array} array   变色依赖的关键颜色的二维数组，按rgb传入，ex: [[255,255,0],[0,220,220],[220,0,220]]
- * @param  {number} msec    完成一个变色阶段的时间（毫秒），即从array[i]变色到array[i+1]的时间。为了避免
- *                          闪烁伤害眼睛，msec不能小于400
- * @param  {string} isColor   如果要变色的是css的color属性，传入'color'
- * 
- */
-function startLoop(element,array,msec,isColor){
-	if(!element) return;
-	if(!Number(msec)) msec=3000;
-	if(msec<400) msec=400;
-	var second = msec/1000;
-	array = array || [[255,255,0],[0,220,220],[153,51,0]];
-	for (var i = array.length - 1; i >= 0; i--) {
-		array[i].length<3? array[i].length<2? array[i].length<1? array[i][0]=0:array[i][1]=0:array[i][2]=0:'';
-		array[i][0]>255?array[i][0]=255:'';
-		array[i][1]>255?array[i][1]=255:'';
-		array[i][2]>255?array[i][2]=255:'';
-		array[i][0]<0?array[i][0]=0:'';
-		array[i][1]<0?array[i][1]=0:'';
-		array[i][2]<0?array[i][2]=0:'';
-	};
-	var msg = {
-		"array": array,
-		"pointer":0,
-		"len": array.length,
-		"page":element,
-		"msec":msec,
-		"second":second
+(function(window){
+	window.startLoop = startLoop;
+	/**
+	 * 启动方法
+	 * @param  {HTMLElement} element 接受变色的元素
+	 * @param  {array} array   变色依赖的关键颜色的二维数组，按rgb传入，ex: [[255,255,0],[0,220,220],[220,0,220]]
+	 * @param  {number} msec    完成一个变色阶段的时间（毫秒），即从array[i]变色到array[i+1]的时间。为了避免
+	 *                          闪烁伤害眼睛，msec不能小于400
+	 * @param  {string} isColor   如果要变色的是css的color属性，传入'color'
+	 * 
+	 */
+	function startLoop(element,array,msec,isColor){
+		if(!element) return;
+		if(!Number(msec)) msec=3000;
+		if(msec<400) msec=400;
+		var second = msec/1000;
+		array = array || [[255,255,0],[0,220,220],[153,51,0]];
+		for (var i = array.length - 1; i >= 0; i--) {
+			array[i].length<3? array[i].length<2? array[i].length<1? array[i][0]=0:array[i][1]=0:array[i][2]=0:'';
+			array[i][0]>255?array[i][0]=255:'';
+			array[i][1]>255?array[i][1]=255:'';
+			array[i][2]>255?array[i][2]=255:'';
+			array[i][0]<0?array[i][0]=0:'';
+			array[i][1]<0?array[i][1]=0:'';
+			array[i][2]<0?array[i][2]=0:'';
+		};
+		var msg = {
+			"array": array,
+			"pointer":0,
+			"len": array.length,
+			"page":element,
+			"msec":msec,
+			"second":second
+		}
+		if(isColor === 'color'){
+			msg.color = 'color';
+		}
+		var IEver = getIEVer();
+		if(IEver <10 && IEver !== 0){
+			loopColorForIe(msg);
+		}else{
+			loopColor(msg);
+		}
 	}
-	if(isColor === 'color'){
-		msg.color = 'color';
-	}
-	var IEver = getIEVer();
-	if(IEver <10 && IEver !== 0){
-		loopColorForIe(msg);
-	}else{
-		loopColor(msg);
-	}
-}
 /**
  * 进行颜色渐变。使用css3的transition属性。
  * @param  {Object} msg 包转好的所需属性
@@ -145,3 +146,4 @@ function getIEVer() {
  	}
 	return parseFloat(ua.substring(b + 5, ua.indexOf(";", b)));
 }
+})(window);
