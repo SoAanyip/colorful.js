@@ -2,7 +2,7 @@ colorful.js
 ===================================
 让HTML元素具有自定义的颜色变幻背景
 ----------------------------------- 
-[观看演示页面](http://soaanyip.github.io/)
+[观看演示页面](http://soaanyip.github.io/colorful)
 ----------------------------------- 
 ### v0.1.0  
 ### author by So Aanyip
