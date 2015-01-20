@@ -1,7 +1,7 @@
 /**
- *	colorful.js v0.1.0
+ *	colorful.js v0.2.0
  *	author by So Aanyip
- *  10th Jan 2015
+ *  20th Jan 2015
  */
 (function(window){
 	window.startLoop = startLoop;
@@ -15,6 +15,7 @@
 	 * 
 	 */
 	function startLoop(element,array,msec,isColor){
+		/*检测用户输入*/
 		if(!element) return;
 		if(!Number(msec)) msec=3000;
 		if(msec<400) msec=400;
@@ -29,6 +30,7 @@
 			array[i][1]<0?array[i][1]=0:'';
 			array[i][2]<0?array[i][2]=0:'';
 		};
+		/*包装必要的信息*/
 		var msg = {
 			"array": array,
 			"pointer":0,
@@ -37,12 +39,15 @@
 			"msec":msec,
 			"second":second
 		}
+		/*是否改变的是color*/
 		if(isColor === 'color'){
 			msg.color = 'color';
 		}
+		/*判断是不是低版本(IE9-)浏览器*/
 		var IEver = getIEVer();
 		if(IEver <10 && IEver !== 0){
-			loopColorForIe(msg);
+			msg.first = true;
+			loopColorForIE(msg);
 		}else{
 			loopColor(msg);
 		}
@@ -53,13 +58,17 @@
  * 
  */
 function loopColor(msg){
+	/*初始化元素style中的transition属性*/
 	msg.page.style = msg.page.style || {};
 	msg.page.style['transition']='all '+msg.second+'s linear';
 	msg.page.style['-o-transition']='all '+msg.second+'s linear';
-	msg.page.style['-webkit-transition']='all '+msg.second+'s linear';
 	msg.page.style['-moz-transition']='all '+msg.second+'s linear';
+	msg.page.style['-webkit-transition']='all '+msg.second+'s linear';
+
 	if(!msg.color){
+		/*起始色为array[0]*/
 		msg.page.style.backgroundColor='rgb('+msg.array[msg.pointer]+')';
+		/*设置定时器，每一个变色周期为定时器间隔，直接设置元素背景色为array[i+1]使transition属性生效*/
 		var interval = setInterval(function(){
 			msg.pointer===msg.array.length-1? msg.pointer=0:msg.pointer++;
 			msg.page.style.backgroundColor='rgb('+msg.array[msg.pointer]+')';
@@ -77,46 +86,64 @@ function loopColor(msg){
  * @param  {Object} msg 包转好的所需属性
  * 
  */
-function loopColorForIe(msg){
-	var pointer = msg.pointer;
-	var r = msg.array[pointer][0];
-	var g = msg.array[pointer][1];
-	var b = msg.array[pointer][2];
-	if(!msg.page.style.backgroundColor && !msg.color){
-		toBGColor(0,0,0,msg.page);
-	}else if(!msg.page.style.color && msg.color){
-		toColor(0,0,0,msg.page);
-	}
-	if(!msg.color){
-		var oldColor = msg.page.style.backgroundColor.substring(4);
+function loopColorForIE(msg){
+	/*现在时刻的颜色*/
+	var old_r,old_g,old_b;
+	/*进行ForIE的初始化*/
+	if(msg.first){
+		msg.first = false;
+		/*如果没有设置行内起始色，设置起始色为黑色*/
+		if(!msg.page.style.backgroundColor && !msg.color){
+			toBGColor(0,0,0,msg.page);
+		}else if(!msg.page.style.color && msg.color){
+			toColor(0,0,0,msg.page);
+		}
+		/*拿到现在时刻的颜色*/
+		if(!msg.color){
+			var oldColor = msg.page.style.backgroundColor.substring(4);
+		}else{
+			var oldColor = msg.page.style.color.substring(4);
+		}
+		oldColor=oldColor.substring(0,oldColor.indexOf(')'));
+		var old_rgb = oldColor.split(',');
+		old_r = parseInt(old_rgb[0]);
+		old_g = parseInt(old_rgb[1]);
+		old_b = parseInt(old_rgb[2]);
 	}else{
-		var oldColor = msg.page.style.color.substring(4);
+		/*拿到现在时刻的颜色*/
+		var lastPointer;
+		msg.pointer === 0? lastPointer = msg.len-1 : lastPointer = msg.pointer-1;
+		old_r = msg.array[lastPointer][0];
+		old_g = msg.array[lastPointer][1];
+		old_b = msg.array[lastPointer][2];
 	}
-	oldColor=oldColor.substring(0,oldColor.indexOf(')'));
-	var old_rgb = oldColor.split(',');
-	var old_r = parseInt(old_rgb[0]);
-	var old_g = parseInt(old_rgb[1]);
-	var old_b = parseInt(old_rgb[2]);
+	/*拿到这一变色周期最终颜色*/
+	var r = msg.array[msg.pointer][0];
+	var g = msg.array[msg.pointer][1];
+	var b = msg.array[msg.pointer][2];
 
-	var count=0;
-	var max = 0;
+	var count=0; //每个变色周期定时器运行次数
+	var max = 0; //每个变色周期定时器最大运行次数
+	/*以三色中差值最大的一种颜色的差值作为最大运行次数*/
 	Math.abs(r-old_r)>Math.abs(g-old_g)?
 		Math.abs(r-old_r)>Math.abs(b-old_b)? max=Math.abs(r-old_r) : max=Math.abs(b-old_b) :
 		Math.abs(g-old_g)>Math.abs(b-old_b)? max=Math.abs(g-old_g) : max=Math.abs(b-old_b) ;
-
+	/*确定定时器运行间隔*/
 	var msec = msg.msec/max;
 	var interval = setInterval(function(){
+		/*loopColorForIE的递归*/
 		if(count==max){
 			clearInterval(interval);
 			msg.pointer===msg.len-1? msg.pointer=0:msg.pointer++;
-			loopColorForIe(msg);
+			loopColorForIE(msg);
 		}
+		/*改变颜色的函数调用*/
 		if(!msg.color){
 			toBGColor(old_r,old_g,old_b,msg.page);
 		}else{
 			toColor(old_r,old_g,old_b,msg.page);
 		}
-
+		/*对现在时刻的rbg进行+-1*/
 		r>old_r? old_r++: r<old_r?old_r--:'';
 		g>old_g? old_g++: g<old_g?old_g--:'';
 		b>old_b? old_b++: b<old_b?old_b--:'';
