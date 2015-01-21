@@ -94,9 +94,9 @@ function loopColorForIE(msg){
 		msg.first = false;
 		/*如果没有设置行内起始色，设置起始色为黑色*/
 		if(!msg.page.style.backgroundColor && !msg.color){
-			toBGColor(0,0,0,msg.page);
+			changeForIE(0,0,0,msg.page,'backgroundColor');
 		}else if(!msg.page.style.color && msg.color){
-			toColor(0,0,0,msg.page);
+			changeForIE(0,0,0,msg.page,'color');
 		}
 		/*拿到现在时刻的颜色*/
 		if(!msg.color){
@@ -139,9 +139,9 @@ function loopColorForIE(msg){
 		}
 		/*改变颜色的函数调用*/
 		if(!msg.color){
-			toBGColor(old_r,old_g,old_b,msg.page);
+			changeForIE(old_r,old_g,old_b,msg.page,'backgroundColor');
 		}else{
-			toColor(old_r,old_g,old_b,msg.page);
+			changeForIE(old_r,old_g,old_b,msg.page,'color');
 		}
 		/*对现在时刻的rbg进行+-1*/
 		r>old_r? old_r++: r<old_r?old_r--:'';
@@ -156,14 +156,11 @@ function loopColorForIE(msg){
  * @param  {number} g    green
  * @param  {number} b    blue
  * @param  {HTMLElement} page 进行变色的元素
+ * @param  {string} sign 进行变色的属性
  * 
  */
-function toBGColor(r,g,b,page){
-	page.style.backgroundColor='rgb('+r+','+g+','+b+')';
-}
-/*改变color颜色*/
-function toColor(r,g,b,page){
-	page.style.color='rgb('+r+','+g+','+b+')';
+function changeForIE(r,g,b,page,sign){
+	page.style[sign]='rgb('+r+','+g+','+b+')';
 }
 /*判断浏览器版本*/
 function getIEVer() {
