@@ -37,11 +37,12 @@
 			"len": array.length,
 			"page":element,
 			"msec":msec,
-			"second":second
+			"second":second,
+			"sign":'backgroundColor'
 		}
 		/*是否改变的是color*/
 		if(isColor === 'color'){
-			msg.color = 'color';
+			msg.sign = 'color';
 		}
 		/*判断是不是低版本(IE9-)浏览器*/
 		var IEver = getIEVer();
@@ -65,21 +66,13 @@ function loopColor(msg){
 	msg.page.style['-moz-transition']='all '+msg.second+'s linear';
 	msg.page.style['-webkit-transition']='all '+msg.second+'s linear';
 
-	if(!msg.color){
-		/*起始色为array[0]*/
-		msg.page.style.backgroundColor='rgb('+msg.array[msg.pointer]+')';
-		/*设置定时器，每一个变色周期为定时器间隔，直接设置元素背景色为array[i+1]使transition属性生效*/
-		var interval = setInterval(function(){
-			msg.pointer===msg.array.length-1? msg.pointer=0:msg.pointer++;
-			msg.page.style.backgroundColor='rgb('+msg.array[msg.pointer]+')';
-		},msg.msec);
-	}else{
-		msg.page.style.color='rgb('+msg.array[msg.pointer]+')';
-		var interval = setInterval(function(){
-			msg.pointer===msg.array.length-1? msg.pointer=0:msg.pointer++;
-			msg.page.style.color='rgb('+msg.array[msg.pointer]+')';
-		},msg.msec);
-	}
+	/*起始色为array[0]*/
+	msg.page.style[msg.sign]='rgb('+msg.array[msg.pointer]+')';
+	/*设置定时器，每一个变色周期为定时器间隔，直接设置元素背景色为array[i+1]使transition属性生效*/
+	var interval = setInterval(function(){
+		msg.pointer===msg.array.length-1? msg.pointer=0:msg.pointer++;
+		msg.page.style[msg.sign]='rgb('+msg.array[msg.pointer]+')';
+	},msg.msec);
 }
 /**
  * 为低版本浏览器进行颜色渐变。使用javascript定时器进行。
@@ -93,17 +86,11 @@ function loopColorForIE(msg){
 	if(msg.first){
 		msg.first = false;
 		/*如果没有设置行内起始色，设置起始色为黑色*/
-		if(!msg.page.style.backgroundColor && !msg.color){
-			changeForIE(0,0,0,msg.page,'backgroundColor');
-		}else if(!msg.page.style.color && msg.color){
-			changeForIE(0,0,0,msg.page,'color');
+		if(!msg.page.style[msg.sign]){
+			changeForIE(0,0,0,msg.page,msg.sign);
 		}
 		/*拿到现在时刻的颜色*/
-		if(!msg.color){
-			var oldColor = msg.page.style.backgroundColor.substring(4);
-		}else{
-			var oldColor = msg.page.style.color.substring(4);
-		}
+		var oldColor = msg.page.style[msg.sign].substring(4);
 		oldColor=oldColor.substring(0,oldColor.indexOf(')'));
 		var old_rgb = oldColor.split(',');
 		old_r = parseInt(old_rgb[0]);
@@ -135,14 +122,10 @@ function loopColorForIE(msg){
 		if(count==max){
 			clearInterval(interval);
 			msg.pointer===msg.len-1? msg.pointer=0:msg.pointer++;
-			loopColorForIE(msg);
+			return loopColorForIE(msg);
 		}
 		/*改变颜色的函数调用*/
-		if(!msg.color){
-			changeForIE(old_r,old_g,old_b,msg.page,'backgroundColor');
-		}else{
-			changeForIE(old_r,old_g,old_b,msg.page,'color');
-		}
+		changeForIE(old_r,old_g,old_b,msg.page,msg.sign);
 		/*对现在时刻的rbg进行+-1*/
 		r>old_r? old_r++: r<old_r?old_r--:'';
 		g>old_g? old_g++: g<old_g?old_g--:'';
