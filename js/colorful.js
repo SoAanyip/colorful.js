@@ -86,12 +86,9 @@ function loopColorForIE(msg){
 	if(msg.first){
 		msg.first = false;
 		/*如果没有设置行内起始色，设置起始色为黑色*/
-		if(!msg.page.style[msg.sign]){
-			changeForIE(0,0,0,msg.page,msg.sign);
-		}
+		var oldColor = msg.page.style[msg.sign] || 'rgb(0,0,0)';
 		/*拿到现在时刻的颜色*/
-		var oldColor = msg.page.style[msg.sign].substring(4);
-		oldColor=oldColor.substring(0,oldColor.indexOf(')'));
+		oldColor = oldColor.substring(4,oldColor.indexOf(')'));
 		var old_rgb = oldColor.split(',');
 		old_r = parseInt(old_rgb[0]);
 		old_g = parseInt(old_rgb[1]);
@@ -125,25 +122,13 @@ function loopColorForIE(msg){
 			return loopColorForIE(msg);
 		}
 		/*改变颜色的函数调用*/
-		changeForIE(old_r,old_g,old_b,msg.page,msg.sign);
+		msg.page.style[msg.sign]='rgb('+old_r+','+old_g+','+old_b+')';
 		/*对现在时刻的rbg进行+-1*/
 		r>old_r? old_r++: r<old_r?old_r--:'';
 		g>old_g? old_g++: g<old_g?old_g--:'';
 		b>old_b? old_b++: b<old_b?old_b--:'';
 		count++;
 	},msec);
-}
-/**
- * 改变背景颜色
- * @param  {number} r    red
- * @param  {number} g    green
- * @param  {number} b    blue
- * @param  {HTMLElement} page 进行变色的元素
- * @param  {string} sign 进行变色的属性
- * 
- */
-function changeForIE(r,g,b,page,sign){
-	page.style[sign]='rgb('+r+','+g+','+b+')';
 }
 /*判断浏览器版本*/
 function getIEVer() {
