@@ -80,17 +80,17 @@
 			<p>最简单用法：</p>
 			<p class="code">startLoop(document.getElementById('page'));</p><br/>
 			<p>调用方法：</p>
-			<p class="code">function startLoop(element,array,msec,isColor)</p>
+			<p class="code">function startLoop(element,array,msec,attr)</p>
 			<p class="code">@param  {HTMLElement} element 接受变色的元素</p>
 			<p class="code">@param  {array} array   变色依赖的关键颜色的二维数组，按rgb传入，ex: [[255,255,0],[0,220,220],[220,0,220]]</p>
 			<p class="code">@param  {number} msec    完成一个变色阶段的时间（毫秒），即从array[i]变色到array[i+1]的时间。为了避免闪烁伤害眼睛，msec不能小于400</p>
-			<p class="code">@param  {string} isColor   如果要变色的是css的color属性，传入'color'</p>
+			<p class="code">@param  {string} attr   如果要变色的是css的其他属性，传入属性的名字，如'color'</p>
 			<p>example：</p>
 			<p class="code">var page = document.getElementById('page');</p>
 			<p class="code">var array = [[255,255,0],[0,220,220],[153,51,0]];</p>
 			<p class="code">var msec = 3000;</p>
 			<p class="code">startLoop(page,array,msec);</p>
-			<p>传入'isColor'的效果：</p>
+			<p>attr传入'color'的效果：</p>
 			<p id="isColor">I`m colorful.js</p>
 		</article>
 	</div>

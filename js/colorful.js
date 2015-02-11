@@ -1,7 +1,7 @@
 /**
- *	colorful.js v0.2.0
+ *	colorful.js v0.3.0
  *	author by So Aanyip
- *  20th Jan 2015
+ *  11th Feb 2015
  */
 (function(window){
 	window.startLoop = startLoop;
@@ -11,10 +11,10 @@
 	 * @param  {array} array   变色依赖的关键颜色的二维数组，按rgb传入，ex: [[255,255,0],[0,220,220],[220,0,220]]
 	 * @param  {number} msec    完成一个变色阶段的时间（毫秒），即从array[i]变色到array[i+1]的时间。为了避免
 	 *                          闪烁伤害眼睛，msec不能小于400
-	 * @param  {string} isColor   如果要变色的是css的color属性，传入'color'
+	 * @param  {string} attr   如果要变色的是css的其他属性，传入属性的名字，如'color'
 	 * 
 	 */
-	function startLoop(element,array,msec,isColor){
+	function startLoop(element,array,msec,attr){
 		/*检测用户输入*/
 		if(!element) return;
 		if(!Number(msec)) msec=3000;
@@ -32,18 +32,16 @@
 		};
 		/*包装必要的信息*/
 		var msg = {
-			"array": array,
-			"pointer":0,
-			"len": array.length,
-			"page":element,
-			"msec":msec,
-			"second":second,
-			"sign":'backgroundColor'
+			'array': array,
+			'pointer':0,
+			'len': array.length,
+			'page':element,
+			'msec':msec,
+			'second':second,
+			'sign':'backgroundColor'
 		}
-		/*是否改变的是color*/
-		if(isColor === 'color'){
-			msg.sign = 'color';
-		}
+		/*如果改变的不是背景颜色*/
+		if(attr) msg.sign = attr;
 		/*判断是不是低版本(IE9-)浏览器*/
 		var IEver = getIEVer();
 		if(IEver <10 && IEver !== 0){
