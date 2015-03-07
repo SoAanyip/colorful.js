@@ -1,7 +1,7 @@
 /**
- *	colorful.js v0.3.0
- *	author by So Aanyip
- *  11th Feb 2015
+ * colorful.js v0.3.0
+ * author by So Aanyip
+ * 11th Feb 2015
  */
 (function(window){
 	window.startLoop = startLoop;
